@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鋼材残材管理システム</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- ヘッダー -->
+        <header class="app-header">
+            <h1>🔧 鋼材残材管理</h1>
+            <p class="subtitle">Steel Scrap Management System</p>
+        </header>
+
+        <!-- タブナビゲーション -->
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="register">
+                <span class="tab-icon">📝</span>
+                <span class="tab-label">登録</span>
+            </button>
+            <button class="tab-btn" data-tab="search">
+                <span class="tab-icon">🔍</span>
+                <span class="tab-label">検索・使用</span>
+            </button>
+            <button class="tab-btn" data-tab="list">
+                <span class="tab-icon">📊</span>
+                <span class="tab-label">一覧</span>
+            </button>
+            <button class="tab-btn" data-tab="settings">
+                <span class="tab-icon">⚙️</span>
+                <span class="tab-label">設定</span>
+            </button>
+        </nav>
+
+        <!-- メインコンテンツ -->
+        <main class="main-content">
+            <!-- 登録タブ -->
+            <section id="register-tab" class="tab-content active">
+                <div class="card">
+                    <h2 class="card-title">📝 残材登録</h2>
+                    
+                    <div class="form-group">
+                        <label for="register-name">👤 登録者</label>
+                        <div class="input-with-checkbox">
+                            <input type="text" id="register-name" placeholder="名前を入力">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="remember-register-name" checked>
+                                <span>記憶する</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <p class="info-text">📅 登録日時は自動で記録されます</p>
+
+                    <div id="register-items" class="register-items">
+                        <!-- 残材入力行がここに追加される -->
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn btn-secondary" id="add-row-btn">
+                            ＋ 行を追加
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="remove-row-btn">
+                            － 最後の行を削除
+                        </button>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-large" id="register-btn">
+                        📝 まとめて登録
+                    </button>
+                </div>
+            </section>
+
+            <!-- 検索・使用タブ -->
+            <section id="search-tab" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">🔍 残材を探す・使用する</h2>
+                    
+                    <div class="form-group">
+                        <label for="user-name">👤 使用者</label>
+                        <div class="input-with-checkbox">
+                            <input type="text" id="user-name" placeholder="名前を入力">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="remember-user-name" checked>
+                                <span>記憶する</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="search-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="search-material">材質</label>
+                                <select id="search-material">
+                                    <option value="">すべて</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="search-location">置き場</label>
+                                <select id="search-location">
+                                    <option value="">すべて</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="range-inputs">
+                            <label>厚み (mm)</label>
+                            <div class="range-row">
+                                <input type="number" id="thickness-min" placeholder="最小" step="0.1">
+                                <span class="range-separator">～</span>
+                                <input type="number" id="thickness-max" placeholder="最大" step="0.1">
+                            </div>
+                        </div>
+
+                        <div class="range-inputs">
+                            <label>幅 (mm)</label>
+                            <div class="range-row">
+                                <input type="number" id="width-min" placeholder="最小">
+                                <span class="range-separator">～</span>
+                                <input type="number" id="width-max" placeholder="最大">
+                            </div>
+                        </div>
+
+                        <div class="range-inputs">
+                            <label>長さ (mm)</label>
+                            <div class="range-row">
+                                <input type="number" id="length-min" placeholder="最小">
+                                <span class="range-separator">～</span>
+                                <input type="number" id="length-max" placeholder="最大">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>状態</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="search-status" value="available" checked>
+                                    <span>在庫のみ</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="search-status" value="all">
+                                    <span>すべて</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" id="search-btn">
+                            🔍 検索
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" id="search-results-card" style="display: none;">
+                    <h2 class="card-title">📋 検索結果 (<span id="result-count">0</span>件)</h2>
+                    <div id="search-results" class="search-results">
+                        <!-- 検索結果がここに表示される -->
+                    </div>
+                    <button type="button" class="btn btn-warning btn-large" id="use-selected-btn" style="display: none;">
+                        ✅ 選択した残材を使用済みにする
+                    </button>
+                </div>
+            </section>
+
+            <!-- 一覧タブ -->
+            <section id="list-tab" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">📊 残材一覧</h2>
+                    
+                    <div class="filter-bar">
+                        <div class="form-group">
+                            <label for="filter-material">材質</label>
+                            <select id="filter-material">
+                                <option value="">すべて</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filter-location">置き場</label>
+                            <select id="filter-location">
+                                <option value="">すべて</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filter-status">状態</label>
+                            <select id="filter-status">
+                                <option value="available">在庫のみ</option>
+                                <option value="used">使用済のみ</option>
+                                <option value="all">すべて</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sort-by">並び替え</label>
+                            <select id="sort-by">
+                                <option value="date-desc">登録日（新しい順）</option>
+                                <option value="date-asc">登録日（古い順）</option>
+                                <option value="material">材質順</option>
+                                <option value="location">置き場順</option>
+                                <option value="thickness">厚み順</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="apply-filter-btn">
+                            適用
+                        </button>
+                    </div>
+
+                    <div id="data-list" class="data-list">
+                        <!-- データ一覧がここに表示される -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 設定タブ -->
+            <section id="settings-tab" class="tab-content">
+                <div class="card">
+                    <h2 class="card-title">⚙️ 設定</h2>
+                    
+                    <div class="settings-section">
+                        <h3>📦 材質の管理</h3>
+                        <div class="tag-list" id="material-list">
+                            <!-- 材質リストがここに表示される -->
+                        </div>
+                        <div class="add-item-form">
+                            <input type="text" id="new-material" placeholder="新しい材質を入力">
+                            <button type="button" class="btn btn-secondary" id="add-material-btn">追加</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>📍 置き場の管理</h3>
+                        <div class="tag-list" id="location-list">
+                            <!-- 置き場リストがここに表示される -->
+                        </div>
+                        <div class="add-item-form">
+                            <input type="text" id="new-location" placeholder="新しい置き場を入力">
+                            <button type="button" class="btn btn-secondary" id="add-location-btn">追加</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>🔗 スプレッドシート連携</h3>
+                        <div class="form-group">
+                            <label for="script-url">Google Apps Script URL</label>
+                            <input type="text" id="script-url" placeholder="デプロイしたWebアプリのURLを入力">
+                            <button type="button" class="btn btn-primary" id="save-url-btn">保存</button>
+                        </div>
+                        <p class="info-text">※ 設定方法はREADMEを参照してください</p>
+                        <button type="button" class="btn btn-secondary" id="test-connection-btn">接続テスト</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- モーダル: 編集 -->
+        <div id="edit-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📝 残材を編集</h3>
+                    <button class="modal-close" id="close-edit-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit-id">
+                    <div class="form-group">
+                        <label for="edit-material">材質</label>
+                        <select id="edit-material"></select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-thickness">厚み (mm)</label>
+                            <input type="number" id="edit-thickness" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-width">幅 (mm)</label>
+                            <input type="number" id="edit-width">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-length">長さ (mm)</label>
+                            <input type="number" id="edit-length">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-location">置き場</label>
+                        <select id="edit-location"></select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancel-edit-btn">キャンセル</button>
+                    <button type="button" class="btn btn-primary" id="save-edit-btn">保存</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- モーダル: 置き場移動 -->
+        <div id="move-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>📦 置き場を変更</h3>
+                    <button class="modal-close" id="close-move-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="move-id">
+                    <div class="move-info">
+                        <p><strong>対象:</strong> <span id="move-target-info"></span></p>
+                        <p><strong>現在の置き場:</strong> <span id="move-current-location"></span></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="move-new-location">移動先</label>
+                        <select id="move-new-location"></select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancel-move-btn">キャンセル</button>
+                    <button type="button" class="btn btn-primary" id="confirm-move-btn">移動する</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- トースト通知 -->
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
