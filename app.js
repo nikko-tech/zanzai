@@ -26,12 +26,10 @@ const CONFIG = {
         'SGC'
     ],
     DEFAULT_LOCATIONS: [
-        'A棚-1',
-        'A棚-2',
-        'B棚-1',
-        'B棚-2',
-        '加工場横',
-        '外置き場'
+        'コンプレッサー下',
+        'コマツ裏',
+        '南側',
+        'AMADA側'
     ]
 };
 
@@ -805,8 +803,8 @@ function addMaterial() {
 }
 
 function removeMaterial(material) {
-    if (CONFIG.DEFAULT_MATERIALS.includes(material)) {
-        showToast('デフォルトの材質は削除できません', 'warning');
+    if (state.materials.length <= 1) {
+        showToast('最低1つの材質が必要です', 'warning');
         return;
     }
 
@@ -840,8 +838,8 @@ function addLocation() {
 }
 
 function removeLocation(location) {
-    if (CONFIG.DEFAULT_LOCATIONS.includes(location)) {
-        showToast('デフォルトの置き場は削除できません', 'warning');
+    if (state.locations.length <= 1) {
+        showToast('最低1つの置き場が必要です', 'warning');
         return;
     }
 
@@ -895,8 +893,7 @@ function renderMaterialList() {
     container.innerHTML = state.materials.map(m => `
         <span class="tag">
             ${escapeHtml(m)}
-            ${!CONFIG.DEFAULT_MATERIALS.includes(m) ? 
-                `<button class="tag-remove" onclick="removeMaterial('${escapeHtml(m)}')">&times;</button>` : ''}
+            <button class="tag-remove" onclick="removeMaterial('${escapeHtml(m)}')">&times;</button>
         </span>
     `).join('');
 }
@@ -906,8 +903,7 @@ function renderLocationList() {
     container.innerHTML = state.locations.map(l => `
         <span class="tag">
             ${escapeHtml(l)}
-            ${!CONFIG.DEFAULT_LOCATIONS.includes(l) ? 
-                `<button class="tag-remove" onclick="removeLocation('${escapeHtml(l)}')">&times;</button>` : ''}
+            <button class="tag-remove" onclick="removeLocation('${escapeHtml(l)}')">&times;</button>
         </span>
     `).join('');
 }

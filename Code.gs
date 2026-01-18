@@ -36,12 +36,10 @@ const DEFAULT_MATERIALS = [
 
 // デフォルト置き場
 const DEFAULT_LOCATIONS = [
-  'A棚-1',
-  'A棚-2',
-  'B棚-1',
-  'B棚-2',
-  '加工場横',
-  '外置き場'
+  'コンプレッサー下',
+  'コマツ裏',
+  '南側',
+  'AMADA側'
 ];
 
 /**
