@@ -16,6 +16,7 @@ const CONFIG = {
         SCRIPT_URL: 'zanzai_script_url',
         DATA: 'zanzai_data'
     },
+    DEFAULT_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwwxObsk5wJYS-WDIDmXxvh-wle3NfHKOGCSuCI-guH2knRxoiXBpgyQvX-UP84wAA/exec',
     DEFAULT_MATERIALS: [
         'SUS304 NO1',
         'SUS304 2B',
@@ -89,7 +90,7 @@ function loadFromStorage() {
     }
 
     // スクリプトURL
-    state.scriptUrl = localStorage.getItem(CONFIG.STORAGE_KEYS.SCRIPT_URL) || '';
+    state.scriptUrl = localStorage.getItem(CONFIG.STORAGE_KEYS.SCRIPT_URL) || CONFIG.DEFAULT_SCRIPT_URL;
     document.getElementById('script-url').value = state.scriptUrl;
 
     // データ（オフライン用）
